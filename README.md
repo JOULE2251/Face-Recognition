@@ -47,11 +47,14 @@ Sistem ini mencatat kehadiran secara otomatis dan real-time menggunakan kamera d
 - source fcenv/Scripts/activate
 - pip install -r requirements.txt
 
-4. Konfigurasi database
+3. Konfigurasi database
 - Buat database MySQL
 - Atur koneksi di file config / app.py
 
-4. Jalankan aplikasi
+4. Download file trainer.yml pada link google drive berikut ini
+- https://drive.google.com/drive/folders/1PtvG3n0ZhU7Qpdn9Oq7raKfpjqsZh6_S?usp=sharing
+
+5. Jalankan aplikasi
 python app.py
 
 # Cara Penggunaan
