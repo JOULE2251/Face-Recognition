@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFACE - Rekap Presensi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full height */
+            display: flex;
+            flex-direction: column;
+        }
+        .header-top {
+            background: linear-gradient(135deg, #B2495F, #DF6770, #F68C62);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Box shadow for a rectangular effect */
+            position: fixed; /* Make header fixed */
+            top: 0; /* Position it at the top */
+            left: 0; /* Align it to the left */
+            right: 0; /* Stretch it to the right */
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header-top .export-button {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .header-top .export-button:hover {
+            background-color: #357ab8;
+        }
+
+        .header-logo {
+            width: 85px; /* Adjust width as needed */
+            height: 85px; /* Adjust height as needed */
+            margin-right: 10px; /* Space between logo and text */
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar {
+            width: 206px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2); /* Adjusted shadow for a deeper effect */
+            flex-shrink: 0;        
+            display: flex;             
+            flex-direction: column;    
+            height: calc(93% - 85px); /* Adjust height to account for fixed header */
+            margin-top: 90px; /* Push sidebar down below the header */
+            border-radius: 5px; /* Optional: Add rounded corners */
+        }
+        .sidebar h2 {
+            margin: 0 0 20px;
+            text-align: center;
+            color: #DF6770;
+        }
+        .sidebar a {
+            font-family: 'Poppins', sans-serif; /* Set the font to Poppins */
+            font-size: 20px; /* Increase font size to 30px */
+            font-weight: bold; /* Make the font bold */
+            color: #DF6770; /* Keep the existing color */
+            text-decoration: none;
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center vertically */
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s, padding-left 0.3s;
+            position: relative; /* Posisi relatif untuk efek background */
+        }
+        .sidebar a:hover {
+            background-color: #ccc;
+            padding-left: 20px;
+        
+        }
+        .sidebar-logo {
+            width: 37px; /* Set width of the logo */
+            height: 37px; /* Set height of the logo */
+            margin-right: 5px; /* Space between logo and text */
+        }
+        .logout-container {
+            margin-top: auto; /* Push it to the bottom */
+            margin-bottom: 20px; /* Space below */
+            text-align: center; /* Center the logout link */
+        }
+        .logout {
+            background: #DF6770 !important; /* Warna background */
+            color: #ffffff !important; /* Paksa warna teks putih */
+            display: inline-flex; /* Supaya ikon & teks sejajar */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Jarak antara ikon dan teks */
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none !important;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s;
+        }
+
+        .logout:hover {
+            background-color: #B2495F !important; /* Warna saat hover */
+            color: #ffffff !important;
+        }
+
+        .logout i {
+            color: #ffffff !important; /* Paksa ikon juga putih */
+            font-size: 18px;
+        }
+
+        .content {
+            flex-grow: 1;
+            background: #CDC3C3;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+             max-height: 100%;
+        }
+        /* New styles for the header section */
+        .header {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 110px;
+        
+        }
+        .header input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .camera-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        video {
+            width: 88%;
+            height: 370px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+        }
+        .training-button {
+            background-color: #DF6770;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .training-button:hover {
+            background-color: #B2495F;
+        }
+        .table-container {
+            height: calc(84% - 160px);
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ccc; /* Border di sekitar tabel */
+            border-radius: 5px; /* Sudut melengkung */
+            background-color: white; /* Warna latar belakang kontainer */
+            margin-top: 20px; /* Ruang di atas tabel */
+            padding: 10px; /* Padding di dalam kontainer */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bayangan untuk kedalaman */
+        }
+
+        .table-header {
+            font-weight: bold;
+            background-color: #DF6770; /* Header background color */
+            color: white; /* Header text color */
+        }
+
+        .table-row {
+            display: flex; /* Use flexbox for layout */
+        }
+
+        .table-cell {
+            flex: 1; /* Distribute space evenly */
+            padding: 10px; /* Padding for cells */
+           
+        }
+
+        /* Optional: Remove the last row border */
+        .table-row:last-child .table-cell {
+            border-bottom: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px solid #000000;
+            padding: 7px;
+            text-align: center;
+        }
+        th {
+            border: 1px solid #000000;
+            padding: 15px;
+            text-align: center;
+            background-color: #DF6770; /* Warna latar untuk header */
+            color: white;
+        }
+        .month-header {
+            background-color: #DF6770; /* Warna default untuk header bulan */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .today-scan {
+            margin-top: 20px; /* Space above */
+            margin-left: 0px; /* Shift to the right */
+            background-color: #e0e0e0; /* Gray background */
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .pagination button {
+            background-color: #DF6770;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .pagination button:hover {
+            background-color: #B2495F;
+        }
+        .pagination span {
+            font-weight: bold;
+            color: #DF6770;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .export-button {
+            background-color: #DF6770;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .export-button:hover {
+            background-color: #B2495F;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-top">
+    <img src="{{ url_for('static', filename='gambar/LOGO_LIFACE_WHITE.png') }}" alt="Logo" class="header-logo">
+    <h1>LIFACE</h1>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <a href="{{ url_for('serve_dashboard_user') }}">
+            <img src="{{ url_for('static', filename='gambar/dashboard.png') }}" alt="Logo" class="sidebar-logo">
+            Dashboard
+        </a>
+        <a href="{{ url_for('user_presensi') }}">
+            <img src="{{ url_for('static', filename='gambar/absence.png') }}" alt="Presensi Logo" class="sidebar-logo">
+            Presence
+        </a>
+        <div class="logout-container">
+        <a href="{{ url_for('login') }}" class="logout">
+    <i class="fas fa-sign-out-alt"></i>
+    Login Admin
+    </a>
+</div>
+    </div>
+
+    <div class="content">
+        <div class="header">
+        <div class="camera-container">
+            <img src="{{ url_for('video_feed') }}" width="640" height="480" style="border-radius:10px;">
+        </div>
+    </div> 
+    <div class="today-scan">TODAY SCAN</div>
+    <div class="table-container">
+        <div class="table-header">
+            <div class="table-row">
+                <div class="table-cell">Id Presensi</div>
+                <div class="table-cell">Name</div>
+                <div class="table-cell">Presence</div>
+                <div class="table-cell">Homecoming</div>
+            </div>
+        </div>
+        <div class="table-body" id="table-presensi">
+            {% for row in data_presensi %}
+            <div class="table-row">
+                <div class="table-cell">{{ row[0] }}</div>
+                <div class="table-cell">{{ row[1] }}</div>
+                <div class="table-cell">{{ row[2] }}</div>
+                <div class="table-cell">{{ row[3] }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>                 
+</tbody>
+        </div>
+    </div>
+</div>
+<script>
+    // Select all rows from the table body
+const rows = document.querySelectorAll(".table-body .table-row");
+const rowsPerPage = 10;
+let currentPage = 1;
+
+function showPage(page) {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    rows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? 'flex' : 'none';
+    });
+
+    document.getElementById('pageNumber').textContent = page;
+}
+
+// Handle the Next button click
+document.getElementById('nextButton').addEventListener('click', () => {
+    if (currentPage * rowsPerPage < rows.length) {
+        currentPage++;
+        showPage(currentPage);
+    }
+});
+
+// Handle the Previous button click
+document.getElementById('prevButton').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+    }
+});
+
+// Show the first page on load
+    function loadPresensi() {
+        fetch("/api/presensi_realtime", { cache: 'no-store' })
+            .then(response => {
+                if (!response.ok) throw new Error("HTTP error " + response.status);
+                return response.json();
+            })
+            .then(data => {
+                const tableBody = document.getElementById('table-presensi');
+                if (!tableBody) {
+                    console.error("Element #table-presensi not found");
+                    return;
+                }
+                tableBody.innerHTML = ""; // reset isi tabel
+
+                // Server sekarang mengembalikan array objek {id,nama,jam_masuk,jam_pulang,tanggal}
+                data.forEach(row => {
+                    tableBody.innerHTML += `
+                        <div class="table-row">
+                            <div class="table-cell">${row.id ?? row[0]}</div>
+                            <div class="table-cell">${row.nama ?? row[1]}</div>
+                            <div class="table-cell">${row.jam_masuk ?? row[2] ?? '-'}</div>
+                            <div class="table-cell">${row.jam_pulang ?? row[3] ?? '-'}</div>
+                        </div>
+                    `;
+                });
+
+                // re-apply pagination after update
+                applyPagination(); // pastikan fungsi applyPagination() ada (sesuai kodemu)
+            })
+            .catch(err => {
+                console.error("Failed to fetch realtime presence:", err);
+            });
+    }
+
+    // setInterval untuk polling (set 2s; ubah kalau mau lebih cepat/lambat)
+    setInterval(loadPresensi, 2000);
+    // load awal
+    loadPresensi();
+</script>
+
+</body>
+</html>

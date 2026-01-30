@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFACE - Rekap Presensi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full height */
+            display: flex;
+            flex-direction: column;
+        }
+        .header-top {
+            background: linear-gradient(135deg, #B2495F, #DF6770, #F68C62);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Box shadow for a rectangular effect */
+            position: fixed; /* Make header fixed */
+            top: 0; /* Position it at the top */
+            left: 0; /* Align it to the left */
+            right: 0; /* Stretch it to the right */
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header-top .export-button {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .header-top .export-button:hover {
+            background-color: #357ab8;
+        }
+
+        .header-logo {
+            width: 85px; /* Adjust width as needed */
+            height: 85px; /* Adjust height as needed */
+            margin-right: 10px; /* Space between logo and text */
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar {
+            width: 206px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2); /* Adjusted shadow for a deeper effect */
+            flex-shrink: 0;        
+            display: flex;             
+            flex-direction: column;    
+            height: calc(93% - 85px); /* Adjust height to account for fixed header */
+            margin-top: 90px; /* Push sidebar down below the header */
+            border-radius: 5px; /* Optional: Add rounded corners */
+        }
+        .sidebar h2 {
+            margin: 0 0 20px;
+            text-align: center;
+            color: #DF6770;
+        }
+        .sidebar a {
+            font-family: 'Poppins', sans-serif; /* Set the font to Poppins */
+            font-size: 20px; /* Increase font size to 30px */
+            font-weight: bold; /* Make the font bold */
+            color: #DF6770; /* Keep the existing color */
+            text-decoration: none;
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center vertically */
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s, padding-left 0.3s;
+            position: relative; /* Posisi relatif untuk efek background */
+        }
+        .sidebar a:hover {
+            background-color: #ccc;
+            padding-left: 20px;
+        
+        }
+        .sidebar-logo {
+            width: 37px; /* Set width of the logo */
+            height: 37px; /* Set height of the logo */
+            margin-right: 5px; /* Space between logo and text */
+        }
+        .logout-container {
+            margin-top: auto; /* Push it to the bottom */
+            margin-bottom: 20px; /* Space below */
+            text-align: center; /* Center the logout link */
+        }
+        .logout {
+            background: #DF6770 !important; /* Warna background */
+            color: #ffffff !important; /* Paksa warna teks putih */
+            display: inline-flex; /* Supaya ikon & teks sejajar */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Jarak antara ikon dan teks */
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none !important;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s;
+        }
+
+        .logout:hover {
+            background-color: #B2495F !important; /* Warna saat hover */
+            color: #ffffff !important;
+        }
+
+        .logout i {
+            color: #ffffff !important; /* Paksa ikon juga putih */
+            font-size: 18px;
+        }
+
+        .content {
+            flex-grow: 1;
+            background: #CDC3C3;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 100%;
+        }
+        .header-top {
+            background: linear-gradient(135deg, #B2495F, #DF6770, #F68C62);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Box shadow for a rectangular effect */
+            position: fixed; /* Make header fixed */
+            top: 0; /* Position it at the top */
+            left: 0; /* Align it to the left */
+            right: 0; /* Stretch it to the right */
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+       
+        .header input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }       
+      .header {
+            height: calc(74% - 10px); /* Set the height */
+            background: white;
+            padding: 40px 10px; /* Adjusted padding */
+            border-radius: 7px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 110px; /* Push header down below the fixed header */
+        }
+        .table-container {
+            height: calc(84% - 30px); /* Maintain height adjustment */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+            margin-top: 0; /* Remove margin-top to align with header */
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+    table {
+        width: 100%; /* Ensure the table takes the full width */
+        border-collapse: collapse;
+    }
+    td, th {
+        border: 1px solid #000000;
+        padding: 7px; /* Adjust padding for cells */
+        text-align: center;
+    }
+    th {
+        background-color: #DF6770; /* Header background color */
+        color: white;
+    }
+        .month-header {
+            background-color: #DF6770; /* Warna default untuk header bulan */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .export-button {
+            background-color: #DF6770;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .export-button:hover {
+            background-color: #B2495F;
+        }
+        .pagination {
+            display: flex; /* Enable Flexbox */
+            justify-content: center; /* Center the buttons horizontally */
+            align-items: center; /* Center the buttons vertically */
+            margin-top: 10px;
+            padding: 10px; /* Add padding for better spacing */
+        }
+
+        .pagination button {
+            background-color: #DF6770;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px; /* Space between buttons */
+        }
+        .pagination button:disabled {
+            background-color: #ccc; /* Disabled button color */
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-top">
+    <img src="{{ url_for('static', filename='gambar/LOGO_LIFACE_WHITE.png') }}" alt="Logo" class="header-logo">
+    <h1>LIFACE</h1>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <a href="{{ url_for('serve_dashboard_user') }}">
+            <img src="{{ url_for('static', filename='gambar/dashboard.png') }}" alt="Logo" class="sidebar-logo">
+            Dashboard
+        </a>
+        <a href="{{ url_for('user_presensi') }}">
+            <img src="{{ url_for('static', filename='gambar/absence.png') }}" alt="Presensi Logo" class="sidebar-logo">
+            Presence
+        </a>
+        <div class="logout-container">
+    <a href="{{ url_for('login') }}" class="logout">
+    <i class="fas fa-sign-out-alt"></i>
+    Login Admin
+    </a>
+</div>
+    </div>
+
+   <div class="content">
+    <div class="header">
+        <!-- === DATE PICKER BUTTON & POPUP === -->
+        <div style="margin-bottom: 20px;">
+            <button id="openCalendar" style="
+                background:#DF6770; 
+                color:white; 
+                border:none; 
+                padding:10px 15px; 
+                border-radius:8px; 
+                cursor:pointer;
+                font-size:16px;">
+                <i class="fa fa-calendar"></i> Select Date
+            </button>
+        </div>
+
+        <!-- POPUP KALENDER -->
+        <div id="calendarPopup" style="
+            display:none;
+            position:fixed;
+            top:50%; left:50%;
+            transform:translate(-50%, -50%);
+            background:white;
+            padding:20px;
+            border-radius:15px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.3);
+            z-index:9999;
+            width:300px;
+            overflow:hidden;
+        ">
+            <input type="date" id="calendarInput" style="
+                width:100%; 
+                padding:10px; 
+                font-size:16px; 
+                border:1px solid #ccc;
+                border-radius:6px;
+                height:40px;
+                box-sizing:border-box;
+            ">
+
+            <!-- BUTTON AREA DI TENGAH -->
+            <div style="
+                margin-top:20px; 
+                display:flex; 
+                justify-content:center; 
+                gap:15px;
+            ">
+                <!-- BATAL: MERAH -->
+                <button id="closeCalendar" style="
+                    padding:8px 18px; 
+                    background:#DF4040; 
+                    color:white;
+                    border:none; 
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-size:14px;
+                    font-weight:600;
+                    min-width:90px;
+                    text-align:center;
+                ">
+                    Cancel
+                </button>
+
+                <!-- TERAPKAN: WARNA DF6770 -->
+                <button id="applyDate" style="
+                    padding:8px 18px; 
+                    background:#DF6770; 
+                    color:white;
+                    border:none; 
+                    border-radius:6px;
+                    cursor:pointer;
+                    font-size:14px;
+                    font-weight:600;
+                    min-width:90px;
+                    text-align:center;
+                ">
+                    Apply
+                </button>
+            </div>
+        </div>
+
+        <table id="rekapTable">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Presence</th>
+                <th>Homecoming</th>
+                <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data akan dimasukkan otomatis lewat JavaScript -->
+            </tbody>
+        </table>
+        <div class="pagination" style="
+            position: fixed;
+            bottom: 20px;
+            left: calc(50% + 120px);  
+            transform: translateX(-50%);
+            background: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 999;
+        ">
+            <button id="prevButton" style="
+                padding: 8px 15px;
+                background: #DF6770;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            ">Previous</button>
+
+            <span id="pageNumber" style="
+                font-size: 16px; 
+                font-weight: 600;
+            ">1</span>
+
+            <button id="nextButton" style="
+                padding: 8px 15px;
+                background: #DF6770;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            ">Next</button>
+        </div>
+    </div>
+</div>
+
+<script>
+   document.addEventListener("DOMContentLoaded", async () => {
+    const tbody = document.querySelector("#rekapTable tbody");
+
+    try {
+        const res = await fetch("/api/presensi-user");
+        const data = await res.json();
+
+        tbody.innerHTML = "";
+
+        if (data.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align:center; color:gray;">
+                        No attendance data recorded
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        // Isi tabel
+        data.forEach((item, index) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.nama}</td>
+                <td>${item.jam_masuk || '-'}</td>
+                <td>${item.jam_pulang || '-'}</td>
+                <td>${item.tanggal || '-'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        initPagination();
+
+    } catch (err) {
+        console.error("Failed to retrieve data:", err);
+        tbody.innerHTML = `
+        <tr>
+            <td colspan="5" style="text-align:center; color:red;">
+                An error occurred while retrieving data
+            </td>
+        </tr>`;
+    }
+});
+
+function initPagination() {
+    const rows = document.querySelectorAll("#rekapTable tbody tr");
+    const rowsPerPage = 13;
+    let currentPage = 1;
+
+    function showPage(page) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? '' : 'none';
+        });
+
+        document.getElementById('pageNumber').textContent = page;
+
+        document.getElementById('prevButton').disabled = (currentPage === 1);
+        document.getElementById('nextButton').disabled = (currentPage * rowsPerPage >= rows.length);
+    }
+
+    document.getElementById('nextButton').onclick = () => {
+        if (currentPage * rowsPerPage < rows.length) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    };
+
+    document.getElementById('prevButton').onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    };
+
+    // Tampilkan halaman awal
+    showPage(currentPage);
+}
+
+    // === OPEN & CLOSE CALENDAR ===
+    document.getElementById("openCalendar").onclick = () => {
+        document.getElementById("calendarPopup").style.display = "block";
+    };
+
+    document.getElementById("closeCalendar").onclick = () => {
+        document.getElementById("calendarPopup").style.display = "none";
+    };
+
+    // === APPLY DATE FILTER ===
+    document.getElementById("applyDate").onclick = async () => {
+        const date = document.getElementById("calendarInput").value;
+
+        if (!date) {
+            alert("Please select the date first.");
+            return;
+        }
+
+        document.getElementById("calendarPopup").style.display = "none";
+
+        const tbody = document.querySelector("#rekapTable tbody");
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Memuat...</td></tr>`;
+
+        try {
+            const res = await fetch(`/api/presensi-user-filter?date=${date}`);
+            const data = await res.json();
+
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align:center;">No attendance for this date</td>
+                    </tr>`;
+                return;
+            }
+
+            data.forEach((item, index) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.nama}</td>
+                    <td>${item.jam_masuk || '-'}</td>
+                    <td>${item.jam_pulang || '-'}</td>
+                    <td>${item.tanggal}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Gagal memuat data</td></tr>`;
+        }
+    };
+
+</script>           
+</div>
+</body>
+</html>

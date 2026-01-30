@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFACE - Rekap Presensi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full height */
+            display: flex;
+            flex-direction: column;
+        }     
+        .header-top {
+            background: linear-gradient(135deg, #B2495F, #DF6770, #F68C62);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Box shadow for a rectangular effect */
+            position: fixed; /* Make header fixed */
+            top: 0; /* Position it at the top */
+            left: 0; /* Align it to the left */
+            right: 0; /* Stretch it to the right */
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+        .header-top h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header-top .export-button {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .header-top .export-button:hover {
+            background-color: #357ab8;
+        }
+
+        .header-logo {
+            width: 85px; /* Adjust width as needed */
+            height: 85px; /* Adjust height as needed */
+            margin-right: 10px; /* Space between logo and text */
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar {
+            width: 206px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2); /* Adjusted shadow for a deeper effect */
+            flex-shrink: 0;        
+            display: flex;             
+            flex-direction: column;    
+            height: calc(93% - 85px); /* Adjust height to account for fixed header */
+            margin-top: 90px; /* Push sidebar down below the header */
+            border-radius: 5px; /* Optional: Add rounded corners */
+        }
+        .sidebar h2 {
+            margin: 0 0 20px;
+            text-align: center;
+            color: #DF6770;
+        }
+        .sidebar a {
+            font-family: 'Poppins', sans-serif; /* Set the font to Poppins */
+            font-size: 20px; /* Increase font size to 30px */
+            font-weight: bold; /* Make the font bold */
+            color: #DF6770; /* Keep the existing color */
+            text-decoration: none;
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center vertically */
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s, padding-left 0.3s;
+            position: relative; /* Posisi relatif untuk efek background */
+        }
+        .sidebar a:hover {
+            background-color: #ccc;
+            padding-left: 20px;
+        
+        }
+        .sidebar-logo {
+            width: 37px; /* Set width of the logo */
+            height: 37px; /* Set height of the logo */
+            margin-right: 5px; /* Space between logo and text */
+        }
+        .logout-container {
+            margin-top: auto; /* Push it to the bottom */
+            margin-bottom: 20px; /* Space below */
+            text-align: center; /* Center the logout link */
+        }
+        .logout {
+            background: #DF6770 !important; /* Warna background */
+            color: #ffffff !important; /* Paksa warna teks putih */
+            display: inline-flex; /* Supaya ikon & teks sejajar */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Jarak antara ikon dan teks */
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none !important;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s;
+        }
+
+        .logout:hover {
+            background-color: #B2495F !important; /* Warna saat hover */
+            color: #ffffff !important;
+        }
+
+        .logout i {
+            color: #ffffff !important; /* Paksa ikon juga putih */
+            font-size: 18px;
+        }
+
+        .content {
+            flex-grow: 1;
+            background: #CDC3C3;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        .header {
+            background: linear-gradient(to right, #fcfbfb);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgb(16, 16, 16);
+            margin-bottom: 20px;
+            border-radius: 10px;
+            margin-top: 110px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 19px;
+            color: #DF6770;
+        }
+        .header select, .header button {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            color: #DF6770;
+        }
+        .header button {
+            background-color: #4a90e2;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        .header button:hover {
+            background-color: #357ab8;
+        }
+        .table-container {
+            height: calc(84% - 30px); /* Mengatur tinggi kontainer */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ccc; /* Border di sekitar tabel */
+            border-radius: 5px; /* Sudut melengkung */
+            background-color: white; /* Warna latar belakang kontainer */
+            margin-top: 20px; /* Ruang di atas tabel */
+            padding: 10px; /* Padding di dalam kontainer */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bayangan untuk kedalaman */
+            margin-bottom: 10px; /* Ruang di bawah kontainer */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px solid #000000;
+            padding: 7px;
+            text-align: center;
+        }
+        th {
+            border: 1px solid #000000;
+            padding: 15px;
+            text-align: center;
+            background-color: #F68C62; /* Warna latar untuk header */
+            color: white;
+        }
+        .month-header {
+            background-color: #DF6770; /* Warna default untuk header bulan */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .pagination button {
+            background-color: #DF6770;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .pagination button:hover {
+            background-color: #B2495F;
+        }
+        .pagination span {
+            font-weight: bold;
+            color: #DF6770;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .export-button {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .export-button:hover {
+            background-color: #357ab8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-top">
+    <img src="{{ url_for('static', filename='gambar/LOGO_LIFACE_WHITE.png') }}" alt="Logo" class="header-logo">
+    <h1>LIFACE</h1>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <a href="{{ url_for('dashboard_admin') }}">
+        <img src="{{ url_for('static', filename='gambar/dashboard.png') }}" alt="Logo" class="sidebar-logo">
+            Dashboard
+        </a>
+        <a href="{{ url_for('add_personel') }}">
+        <img src="{{ url_for('static', filename='gambar/add.png') }}" alt="Personnel Logo" class="sidebar-logo">
+            Add Personel
+        </a>
+        <div class="logout-container">
+    <a href="{{ url_for('logout') }}" class="logout">
+    <i class="fas fa-sign-out-alt"></i>
+    Log out
+    </a>
+</div>
+    </div>
+
+    <div class="content">
+        <div class="header">
+            <h1>Monthly attendance recap</h1>
+            <div>
+                <select id="bulanSelect">
+                    <option value="january">January</option>
+                    <option value="february">February</option>
+                    <option value="march">March</option>
+                    <option value="april">April</option>
+                    <option value="mey">Mey</option>
+                    <option value="june">June</option>
+                    <option value="july">July</option>
+                    <option value="agust">August</option>
+                    <option value="september">September</option>
+                    <option value="october" >October</option>
+                    <option value="november">November</option>
+                    <option value="december">December</option>
+                </select>
+                <select id="tahunSelect" style="margin-left: 8px;">
+                </select>
+                <button class="export-button">Export Excel</button>
+            </div>
+        </div>
+        <div class="table-container">
+
+            <!-- Search by Name -->
+        <input 
+            type="text" 
+            id="searchName" 
+            placeholder="Search by name..."
+            style="
+                width: 1120px;
+                max-width: 100%;
+                padding: 10px 14px;
+                margin-bottom: 12px;
+                border-radius: 10px;
+                border: 1.5px solid #DF6770;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            "
+            onfocus="this.style.borderColor='#B2495F'; this.style.boxShadow='0 0 0 3px rgba(223,103,112,0.2)'"
+            onblur="this.style.borderColor='#DF6770'; this.style.boxShadow='none'"
+        >
+
+    <table id="rekapTable">
+    <thead>
+        <tr>
+            <th colspan="2" id="bulanHeader" class="month-header"></th>
+            <th colspan="7" class="month-header">Week 1</th>
+            <th colspan="7" class="month-header">Week 2</th>
+            <th colspan="7" class="month-header">Week 3</th>
+            <th colspan="7" class="month-header">Week 4</th>
+            <th colspan="3" class="month-header"></th>
+            <th rowspan="2">Number of Attendees</th>
+        </tr>
+        <tr>
+            <th>No</th>
+            <th>Name</th>
+            {% for tgl in range(1, 32) %}
+            <th>{{ tgl }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% if presensi %}
+        {% set grouped = {} %}
+        {% for row in presensi %}
+            {% set nama = row.nama %}
+            {% if nama not in grouped %}
+                {% set _ = grouped.update({nama: {'nama': nama, 'presensi': {}, 'total_hadir': 0}}) %}
+            {% endif %}
+            {% set tanggal = row.tanggal.day %}
+            {% set status = row.status %}
+            {% set _ = grouped[nama]['presensi'].update({tanggal: status}) %}
+            {% if status in ['H', 'T'] %}
+                {% set _ = grouped[nama].update({'total_hadir': grouped[nama]['total_hadir'] + 1}) %}
+            {% endif %}
+        {% endfor %}
+
+        {% for data in grouped.values() %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ data.nama }}</td>
+                {% for tgl in range(1, 32) %}
+                    <td>{{ data.presensi.get(tgl, '') }}</td>
+                {% endfor %}
+                <td>{{ data.total_hadir }}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="34" style="text-align:center; color:gray;">
+                There is no attendance data this month
+            </td>
+        </tr>
+    {% endif %}
+</tbody>
+</table>
+</div>
+    </tbody>
+        </table>
+             <!-- Pagination -->
+        <div class="pagination" style="
+            position: fixed;
+            bottom: 20px;
+            left: calc(50% + 120px);  
+            transform: translateX(-50%);
+            background: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 999;
+        ">
+            <button id="prevButton" style="
+                padding: 8px 15px;
+                background: #DF6770;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            ">Previous</button>
+
+            <span id="pageNumber" style="
+                font-size: 16px; 
+                font-weight: 600;
+            ">1</span>
+
+            <button id="nextButton" style="
+                padding: 8px 15px;
+                background: #DF6770;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            ">Next</button>
+        </div>
+    </div>
+</div>
+<script>
+    // === PAGINATION BARU UNTUK DATA API === //
+    let apiRows = [];
+    let apiRowsPerPage = 11;
+    let apiCurrentPage = 1;
+
+    function renderApiPage(page) {
+        const start = (page - 1) * apiRowsPerPage;
+        const end = start + apiRowsPerPage;
+
+        apiRows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? "" : "none";
+        });
+
+        document.getElementById("pageNumber").textContent = page;
+    }
+
+    document.getElementById("nextButton").addEventListener("click", () => {
+        if (apiCurrentPage * apiRowsPerPage < apiRows.length) {
+            apiCurrentPage++;
+            renderApiPage(apiCurrentPage);
+        }
+    });
+
+    document.getElementById("prevButton").addEventListener("click", () => {
+        if (apiCurrentPage > 1) {
+            apiCurrentPage--;
+            renderApiPage(apiCurrentPage);
+        }
+    });
+
+    // Fungsi dipanggil setelah loadPresensi ngisi tabel
+    function applyPaginationRekap() {
+        const tbody = document.querySelector("#rekapTable tbody");
+        apiRows = Array.from(tbody.querySelectorAll("tr"));
+        apiCurrentPage = 1;
+        renderApiPage(apiCurrentPage);
+    }
+
+    async function loadRekap() {
+      const res = await fetch('/rekap');
+      const data = await res.json();
+
+      const tbody = document.getElementById('rekap-body');
+      tbody.innerHTML = '';
+
+      if (Object.keys(data).length === 0) {
+        // Kalau database kosong, tetap tampil tabel kosong (misal 5 baris dummy)
+        for (let i = 1; i <= 5; i++) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${i}</td><td>-</td>` +
+            Array.from({ length: 31 }, () => `<td></td>`).join('');
+          tbody.appendChild(tr);
+        }
+        return;
+      }
+
+      let no = 1;
+      for (const [nama, hariData] of Object.entries(data)) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${no++}</td><td>${nama}</td>` +
+          Array.from({ length: 31 }, (_, i) => {
+            const tgl = i + 1;
+            const status = hariData[tgl] || '';
+            let kelas = '';
+            if (status === 'H') kelas = 'hadir';
+            else if (status === 'A') kelas = 'absen';
+            else if (status === 'T') kelas = 'terlambat';
+            return `<td class="${kelas}">${status}</td>`;
+          }).join('');
+        tbody.appendChild(tr);
+      }
+    }
+
+    loadRekap();
+
+    document.getElementById("bulanSelect").addEventListener("change", function () {
+    const selectedMonth = this.options[this.selectedIndex].text;
+    
+    // Ubah teks header bulan
+    document.getElementById("bulanHeader").textContent = selectedMonth;
+
+    // Filter data presensi berdasarkan bulan
+    filterDataByMonth(selectedMonth);
+    });
+
+    const tahunSelect = document.getElementById("tahunSelect");
+    const tahunSekarang = new Date().getFullYear();
+
+    for (let t = 2020; t <= tahunSekarang; t++) {
+        let option = document.createElement("option");
+        option.value = t;
+        option.textContent = t;
+        tahunSelect.appendChild(option);
+    }
+
+    // Biar default ke tahun sekarang
+    tahunSelect.value = tahunSekarang;
+
+    // Filter Bulan
+    document.addEventListener("DOMContentLoaded", () => {
+    const bulanSelect = document.getElementById("bulanSelect");
+    const tbody = document.querySelector("#rekapTable tbody");
+    const bulanHeader = document.querySelector(".month-header");
+    const exportButton = document.querySelector(".export-button");
+
+    let currentData = []; // simpan data bulan aktif
+
+        async function loadPresensi(bulan, tahun) {
+            try {
+                const res = await fetch(`/api/presensi/${bulan}/${tahun}`);
+                const data = await res.json();
+
+                // simpan data sekarang (buat export nanti)
+                currentData = data;
+
+                if (bulanHeader) {
+                    bulanHeader.textContent = bulan.charAt(0).toUpperCase() + bulan.slice(1);
+                }
+
+                tbody.innerHTML = "";
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="34" style="text-align:center; color:gray;">
+                        No attendance data recorded this month
+                    </td></tr>`;
+                    return;
+                }
+
+                let no = 1;
+                data.forEach(row => {
+                    const tr = document.createElement("tr");
+                    let cells = `<td>${no++}</td><td>${row.nama}</td>`;
+                    for (let i = 1; i <= 31; i++) {
+                        const status = row.presensi[i] || "";
+                        cells += `<td>${status}</td>`;
+                    }
+                    cells += `<td>${row.total_hadir}</td>`;
+                    tr.innerHTML = cells;
+                    tbody.appendChild(tr);
+                });
+                applyPaginationRekap();
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                tbody.innerHTML = `<tr><td colspan="34" style="text-align:center; color:red;">
+                    Failed to retrieve attendance data
+                </td></tr>`;
+            }
+        }
+
+        // EXPORT EXCEL NGIKUT SEARCH & PAGINATION (FINAL)
+        exportButton.addEventListener("click", () => {
+            const tbody = document.querySelector("#rekapTable tbody");
+            const rows = tbody.querySelectorAll("tr");
+            const exportRows = [];
+
+            rows.forEach(row => {
+                // hanya export baris yang tampil (hasil search)
+                if (row.style.display === "none") return;
+
+                const cells = row.querySelectorAll("td");
+                if (cells.length < 3) return;
+
+                const obj = {
+                    Nama: cells[1].innerText
+                };
+
+                // tanggal 1 - 31
+                for (let i = 2; i <= 32; i++) {
+                    obj[`Tanggal ${i - 1}`] = cells[i]?.innerText || "";
+                }
+
+                obj["Total Hadir"] = cells[cells.length - 1].innerText;
+                exportRows.push(obj);
+            });
+
+            if (exportRows.length === 0) {
+                alert("No data displayed to export!");
+                return;
+            }
+
+            const ws = XLSX.utils.json_to_sheet(exportRows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Presensi");
+
+            const namaBulan =
+                bulanSelect.options[bulanSelect.selectedIndex].text;
+
+            XLSX.writeFile(wb, `Presensi_${namaBulan}.xlsx`);
+        });
+
+        loadPresensi(bulanSelect.value, tahunSelect.value);
+
+        bulanSelect.addEventListener("change", (e) => {
+            loadPresensi(e.target.value, tahunSelect.value);
+        });
+
+        tahunSelect.addEventListener("change", (e) => {
+            loadPresensi(bulanSelect.value, e.target.value);
+        });
+    });
+
+    document.getElementById("searchName").addEventListener("input", function () {
+        const keyword = this.value.toLowerCase();
+        const tbody = document.querySelector("#rekapTable tbody");
+        const rows = tbody.querySelectorAll("tr");
+
+        rows.forEach(row => {
+            const nameCell = row.cells[1]; // kolom Name
+            if (!nameCell) return;
+
+            const nameText = nameCell.textContent.toLowerCase();
+            row.style.display = nameText.includes(keyword) ? "" : "none";
+        });
+    });
+    
+</script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</body>
+</html>

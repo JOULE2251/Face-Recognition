@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFACE - Login As Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center; /* ✅ Tengah horizontal */
+            align-items: center;     /* ✅ Tengah vertikal */
+        }
+
+        .container {
+            display: flex;
+            width: 90%; /* dari 100% max-width, biar agak besar tapi masih ada jarak pinggir */
+            max-width: 1400px; /* lebih lebar dari sebelumnya */
+            height: 92vh; /* ✅ lebih panjang, hampir setinggi layar */
+            box-shadow: 0 13px 35px rgba(0,0,0,0.40);
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            margin: auto; /* biar tetap di tengah */
+        }
+
+        /* ✨ Bagian kiri diperlebar */
+        .image-side {
+            flex: 1.3;
+            background: linear-gradient(135deg, #F68C62, #DF6770, #B2495F);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 90px;
+        }
+
+        .form-side {
+            flex: 1.3;
+            background: white;
+            padding: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* ⬅️ Biar semua isi form (input & tombol) rata tengah */
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 48px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+       h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 48px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            text-align: center; 
+            color: #DF6770; /* ✅ warna teks */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        p {
+            font-size: 20px; /* Sedikit lebih besar agar seimbang dengan H1 */
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: block;
+            width: 180px;         /* ✅ diperbesar dari 100px ke 140px */
+            margin: -100px auto -40px; /* ✅ tambah jarak atas & bawah */
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 15px;
+            background-color: #DF6770;
+            border: none;
+            border-radius: 13px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: 0.3s;
+            width: 40%;
+        }
+
+        button:hover {
+            background-color: #B2495F;
+        }
+
+        /* 📱 Responsif */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 95%;
+                height: auto;
+            }
+
+            .image-side, .form-side {
+                width: 100%;
+                height: auto;
+                padding: 50px;
+            }
+
+            .image-side {
+                flex: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="image-side">
+        <div>
+            <h1>WELCOME</h1>
+            <h1>in LIFACE!</h1>
+            <p>Life Media's face recognition-based attendance system</p>
+        </div>
+    </div>
+    <div class="form-side">
+        <img src="{{ url_for('static', filename='gambar/LOGO_LIFACE_ORANGE.png') }}" alt="Logo Liface" class="logo">
+        <h2>LIFACE</h2>
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endif %}
+    </div>
+</div>
+
+
+</body>
+</html>

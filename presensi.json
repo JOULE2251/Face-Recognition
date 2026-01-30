@@ -1,0 +1,74 @@
+[
+    {
+        "id": 10,
+        "Nama": "JULIAN DUWI PRASETYA",
+        "Tanggal": "2025-10-30",
+        "Shift": "Shift 2",
+        "Status": "H",
+        "Jam_Masuk": "14:56:51",
+        "Jam_Pulang": "16:31:55"
+    },
+    {
+        "id": 11,
+        "Nama": "LIWONG",
+        "Tanggal": "2025-10-30",
+        "Shift": "-",
+        "Status": "A",
+        "Jam_Masuk": "0:00:00",
+        "Jam_Pulang": "0:00:00"
+    },
+    {
+        "id": 8,
+        "Nama": "JULIAN DUWI PRASETYA",
+        "Tanggal": "2025-10-27",
+        "Shift": "Shift 1",
+        "Status": "T",
+        "Jam_Masuk": "8:08:45",
+        "Jam_Pulang": "0:00:00"
+    },
+    {
+        "id": 9,
+        "Nama": "LIWONG",
+        "Tanggal": "2025-10-27",
+        "Shift": "-",
+        "Status": "A",
+        "Jam_Masuk": "0:00:00",
+        "Jam_Pulang": "0:00:00"
+    },
+    {
+        "id": 6,
+        "Nama": "JULIAN DUWI PRASETYA",
+        "Tanggal": "2025-10-26",
+        "Shift": "Tidak Dikenal",
+        "Status": "A",
+        "Jam_Masuk": "21:21:02",
+        "Jam_Pulang": "0:00:00"
+    },
+    {
+        "id": 7,
+        "Nama": "LIWONG",
+        "Tanggal": "2025-10-26",
+        "Shift": "-",
+        "Status": "A",
+        "Jam_Masuk": "0:00:00",
+        "Jam_Pulang": "0:00:00"
+    },
+    {
+        "id": 4,
+        "Nama": "JULIAN DUWI PRASETYA",
+        "Tanggal": "2025-10-25",
+        "Shift": "Shift 2",
+        "Status": "T",
+        "Jam_Masuk": "19:28:16",
+        "Jam_Pulang": "0:00:00"
+    },
+    {
+        "id": 5,
+        "Nama": "LIWONG",
+        "Tanggal": "2025-10-25",
+        "Shift": "-",
+        "Status": "A",
+        "Jam_Masuk": "0:00:00",
+        "Jam_Pulang": "0:00:00"
+    }
+]

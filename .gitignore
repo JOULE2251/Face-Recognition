@@ -1,0 +1,8 @@
+# ignore model besar
+trainer.yml
+
+# ignore virtual environment
+fcenv/
+
+# ignore python cache
+__pycache__/
